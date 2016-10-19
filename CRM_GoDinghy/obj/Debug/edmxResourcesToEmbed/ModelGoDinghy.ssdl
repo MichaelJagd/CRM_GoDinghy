@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="GoDinghyDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="CompanyTable">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CompanyName" Type="nvarchar" MaxLength="50" />
+    <Property Name="Address" Type="nvarchar" MaxLength="50" />
+    <Property Name="PostalCode" Type="int" />
+    <Property Name="City" Type="nvarchar" MaxLength="50" />
+    <Property Name="County" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="CustomersTable">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CompanyID" Type="int" />
+    <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+    <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+    <Property Name="PhoneNummer" Type="int" />
+    <Property Name="Mail" Type="nvarchar" MaxLength="50" />
+    <Property Name="Date" Type="smalldatetime" />
+  </EntityType>
+  <EntityType Name="UsersTable">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+    <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+    <Property Name="Initials" Type="nvarchar" MaxLength="50" />
+    <Property Name="IsAdmin" Type="bit" />
+    <Property Name="IsNormal" Type="bit" />
+    <Property Name="Password" Type="binary" MaxLength="64" />
+    <Property Name="Activ" Type="bit" />
+    <Property Name="Salt" Type="uniqueidentifier" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'GoDinghyDB.dbo.UsersView' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="UsersView">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+    <Property Name="Initials" Type="nvarchar" MaxLength="50" />
+    <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+    <Property Name="IsAdmin" Type="bit" />
+    <Property Name="IsNormal" Type="bit" />
+    <Property Name="Activ" Type="bit" />
+  </EntityType>
+  <Association Name="FK__Customers__Compa__1A14E395">
+    <End Role="CompanyTable" Type="Self.CompanyTable" Multiplicity="0..1" />
+    <End Role="CustomersTable" Type="Self.CustomersTable" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CompanyTable">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="CustomersTable">
+        <PropertyRef Name="CompanyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="spAddUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="vFirstName" Type="nvarchar" Mode="In" />
+    <Parameter Name="vLastName" Type="nvarchar" Mode="In" />
+    <Parameter Name="vInitials" Type="nvarchar" Mode="In" />
+    <Parameter Name="vIsAdmin" Type="bit" Mode="In" />
+    <Parameter Name="vIsNormal" Type="bit" Mode="In" />
+    <Parameter Name="vPassword" Type="nvarchar" Mode="In" />
+    <Parameter Name="vActiv" Type="bit" Mode="In" />
+  </Function>
+  <Function Name="spLogin" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="vInitials" Type="nvarchar" Mode="In" />
+    <Parameter Name="vPassword" Type="nvarchar" Mode="In" />
+  </Function>
+  <EntityContainer Name="GoDinghyDBModelStoreContainer">
+    <EntitySet Name="CompanyTable" EntityType="Self.CompanyTable" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CustomersTable" EntityType="Self.CustomersTable" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UsersTable" EntityType="Self.UsersTable" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="UsersView" EntityType="Self.UsersView" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [UsersView].[ID] AS [ID], 
+    [UsersView].[FirstName] AS [FirstName], 
+    [UsersView].[Initials] AS [Initials], 
+    [UsersView].[LastName] AS [LastName], 
+    [UsersView].[IsAdmin] AS [IsAdmin], 
+    [UsersView].[IsNormal] AS [IsNormal], 
+    [UsersView].[Activ] AS [Activ]
+    FROM [dbo].[UsersView] AS [UsersView]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK__Customers__Compa__1A14E395" Association="Self.FK__Customers__Compa__1A14E395">
+      <End Role="CompanyTable" EntitySet="CompanyTable" />
+      <End Role="CustomersTable" EntitySet="CustomersTable" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

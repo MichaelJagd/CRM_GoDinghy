@@ -1,0 +1,290 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="GoDinghyDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CompanyTable">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CompanyName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Address" Type="nvarchar" MaxLength="50" />
+          <Property Name="PostalCode" Type="int" />
+          <Property Name="City" Type="nvarchar" MaxLength="50" />
+          <Property Name="County" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="CustomersTable">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CompanyID" Type="int" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="PhoneNummer" Type="int" />
+          <Property Name="Mail" Type="nvarchar" MaxLength="50" />
+          <Property Name="Date" Type="smalldatetime" />
+        </EntityType>
+        <EntityType Name="UsersTable">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Initials" Type="nvarchar" MaxLength="50" />
+          <Property Name="IsAdmin" Type="bit" />
+          <Property Name="IsNormal" Type="bit" />
+          <Property Name="Password" Type="binary" MaxLength="64" />
+          <Property Name="Activ" Type="bit" />
+          <Property Name="Salt" Type="uniqueidentifier" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'GoDinghyDB.dbo.UsersView' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="UsersView">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Initials" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="IsAdmin" Type="bit" />
+          <Property Name="IsNormal" Type="bit" />
+          <Property Name="Activ" Type="bit" />
+        </EntityType>
+        <Association Name="FK__Customers__Compa__1A14E395">
+          <End Role="CompanyTable" Type="Self.CompanyTable" Multiplicity="0..1" />
+          <End Role="CustomersTable" Type="Self.CustomersTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompanyTable">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CustomersTable">
+              <PropertyRef Name="CompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="spAddUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="vFirstName" Type="nvarchar" Mode="In" />
+          <Parameter Name="vLastName" Type="nvarchar" Mode="In" />
+          <Parameter Name="vInitials" Type="nvarchar" Mode="In" />
+          <Parameter Name="vIsAdmin" Type="bit" Mode="In" />
+          <Parameter Name="vIsNormal" Type="bit" Mode="In" />
+          <Parameter Name="vPassword" Type="nvarchar" Mode="In" />
+          <Parameter Name="vActiv" Type="bit" Mode="In" />
+        </Function>
+        <Function Name="spLogin" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="vInitials" Type="nvarchar" Mode="In" />
+          <Parameter Name="vPassword" Type="nvarchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="GoDinghyDBModelStoreContainer">
+          <EntitySet Name="CompanyTable" EntityType="Self.CompanyTable" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CustomersTable" EntityType="Self.CustomersTable" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UsersTable" EntityType="Self.UsersTable" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UsersView" EntityType="Self.UsersView" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [UsersView].[ID] AS [ID], 
+    [UsersView].[FirstName] AS [FirstName], 
+    [UsersView].[Initials] AS [Initials], 
+    [UsersView].[LastName] AS [LastName], 
+    [UsersView].[IsAdmin] AS [IsAdmin], 
+    [UsersView].[IsNormal] AS [IsNormal], 
+    [UsersView].[Activ] AS [Activ]
+    FROM [dbo].[UsersView] AS [UsersView]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK__Customers__Compa__1A14E395" Association="Self.FK__Customers__Compa__1A14E395">
+            <End Role="CompanyTable" EntitySet="CompanyTable" />
+            <End Role="CustomersTable" EntitySet="CustomersTable" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="GoDinghyDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CompanyTable">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CompanyName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PostalCode" Type="Int32" />
+          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="County" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CustomersTables" Relationship="Self.FK__Customers__Compa__1A14E395" FromRole="CompanyTable" ToRole="CustomersTable" />
+        </EntityType>
+        <EntityType Name="CustomersTable">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CompanyID" Type="Int32" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNummer" Type="Int32" />
+          <Property Name="Mail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="CompanyTable" Relationship="Self.FK__Customers__Compa__1A14E395" FromRole="CustomersTable" ToRole="CompanyTable" />
+        </EntityType>
+        <EntityType Name="UsersTable">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Initials" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IsAdmin" Type="Boolean" />
+          <Property Name="IsNormal" Type="Boolean" />
+          <Property Name="Password" Type="Binary" MaxLength="64" FixedLength="true" />
+          <Property Name="Activ" Type="Boolean" />
+          <Property Name="Salt" Type="Guid" />
+        </EntityType>
+        <EntityType Name="UsersView">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Initials" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IsAdmin" Type="Boolean" />
+          <Property Name="IsNormal" Type="Boolean" />
+          <Property Name="Activ" Type="Boolean" />
+        </EntityType>
+        <Association Name="FK__Customers__Compa__1A14E395">
+          <End Role="CompanyTable" Type="Self.CompanyTable" Multiplicity="0..1" />
+          <End Role="CustomersTable" Type="Self.CustomersTable" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompanyTable">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="CustomersTable">
+              <PropertyRef Name="CompanyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GoDinghyDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CompanyTables" EntityType="Self.CompanyTable" />
+          <EntitySet Name="CustomersTables" EntityType="Self.CustomersTable" />
+          <EntitySet Name="UsersTables" EntityType="Self.UsersTable" />
+          <EntitySet Name="UsersViews" EntityType="Self.UsersView" />
+          <AssociationSet Name="FK__Customers__Compa__1A14E395" Association="Self.FK__Customers__Compa__1A14E395">
+            <End Role="CompanyTable" EntitySet="CompanyTables" />
+            <End Role="CustomersTable" EntitySet="CustomersTables" />
+          </AssociationSet>
+          <FunctionImport Name="spAddUser">
+            <Parameter Name="vFirstName" Mode="In" Type="String" />
+            <Parameter Name="vLastName" Mode="In" Type="String" />
+            <Parameter Name="vInitials" Mode="In" Type="String" />
+            <Parameter Name="vIsAdmin" Mode="In" Type="Boolean" />
+            <Parameter Name="vIsNormal" Mode="In" Type="Boolean" />
+            <Parameter Name="vPassword" Mode="In" Type="String" />
+            <Parameter Name="vActiv" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="spLogin" ReturnType="Collection(GoDinghyDBModel.spLogin_Result)">
+            <Parameter Name="vInitials" Mode="In" Type="String" />
+            <Parameter Name="vPassword" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="spLogin_Result">
+          <Property Type="String" Name="Message" Nullable="true" MaxLength="250" />
+          <Property Type="Int32" Name="Id" Nullable="true" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="GoDinghyDBModelStoreContainer" CdmEntityContainer="GoDinghyDBEntities">
+          <EntitySetMapping Name="CompanyTables">
+            <EntityTypeMapping TypeName="GoDinghyDBModel.CompanyTable">
+              <MappingFragment StoreEntitySet="CompanyTable">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="County" ColumnName="County" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomersTables">
+            <EntityTypeMapping TypeName="GoDinghyDBModel.CustomersTable">
+              <MappingFragment StoreEntitySet="CustomersTable">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="PhoneNummer" ColumnName="PhoneNummer" />
+                <ScalarProperty Name="Mail" ColumnName="Mail" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UsersTables">
+            <EntityTypeMapping TypeName="GoDinghyDBModel.UsersTable">
+              <MappingFragment StoreEntitySet="UsersTable">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Initials" ColumnName="Initials" />
+                <ScalarProperty Name="IsAdmin" ColumnName="IsAdmin" />
+                <ScalarProperty Name="IsNormal" ColumnName="IsNormal" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Activ" ColumnName="Activ" />
+                <ScalarProperty Name="Salt" ColumnName="Salt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UsersViews">
+            <EntityTypeMapping TypeName="GoDinghyDBModel.UsersView">
+              <MappingFragment StoreEntitySet="UsersView">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Initials" ColumnName="Initials" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="IsAdmin" ColumnName="IsAdmin" />
+                <ScalarProperty Name="IsNormal" ColumnName="IsNormal" />
+                <ScalarProperty Name="Activ" ColumnName="Activ" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="spAddUser" FunctionName="GoDinghyDBModel.Store.spAddUser" />
+          <FunctionImportMapping FunctionImportName="spLogin" FunctionName="GoDinghyDBModel.Store.spLogin">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GoDinghyDBModel.spLogin_Result">
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

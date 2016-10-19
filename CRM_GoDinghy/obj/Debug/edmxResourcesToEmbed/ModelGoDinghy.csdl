@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="GoDinghyDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="CompanyTable">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CompanyName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="PostalCode" Type="Int32" />
+    <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="County" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="CustomersTables" Relationship="Self.FK__Customers__Compa__1A14E395" FromRole="CompanyTable" ToRole="CustomersTable" />
+  </EntityType>
+  <EntityType Name="CustomersTable">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CompanyID" Type="Int32" />
+    <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="PhoneNummer" Type="Int32" />
+    <Property Name="Mail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Date" Type="DateTime" Precision="0" />
+    <NavigationProperty Name="CompanyTable" Relationship="Self.FK__Customers__Compa__1A14E395" FromRole="CustomersTable" ToRole="CompanyTable" />
+  </EntityType>
+  <EntityType Name="UsersTable">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Initials" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="IsAdmin" Type="Boolean" />
+    <Property Name="IsNormal" Type="Boolean" />
+    <Property Name="Password" Type="Binary" MaxLength="64" FixedLength="true" />
+    <Property Name="Activ" Type="Boolean" />
+    <Property Name="Salt" Type="Guid" />
+  </EntityType>
+  <EntityType Name="UsersView">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Initials" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="IsAdmin" Type="Boolean" />
+    <Property Name="IsNormal" Type="Boolean" />
+    <Property Name="Activ" Type="Boolean" />
+  </EntityType>
+  <Association Name="FK__Customers__Compa__1A14E395">
+    <End Role="CompanyTable" Type="Self.CompanyTable" Multiplicity="0..1" />
+    <End Role="CustomersTable" Type="Self.CustomersTable" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CompanyTable">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="CustomersTable">
+        <PropertyRef Name="CompanyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="GoDinghyDBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="CompanyTables" EntityType="Self.CompanyTable" />
+    <EntitySet Name="CustomersTables" EntityType="Self.CustomersTable" />
+    <EntitySet Name="UsersTables" EntityType="Self.UsersTable" />
+    <EntitySet Name="UsersViews" EntityType="Self.UsersView" />
+    <AssociationSet Name="FK__Customers__Compa__1A14E395" Association="Self.FK__Customers__Compa__1A14E395">
+      <End Role="CompanyTable" EntitySet="CompanyTables" />
+      <End Role="CustomersTable" EntitySet="CustomersTables" />
+    </AssociationSet>
+    <FunctionImport Name="spAddUser">
+      <Parameter Name="vFirstName" Mode="In" Type="String" />
+      <Parameter Name="vLastName" Mode="In" Type="String" />
+      <Parameter Name="vInitials" Mode="In" Type="String" />
+      <Parameter Name="vIsAdmin" Mode="In" Type="Boolean" />
+      <Parameter Name="vIsNormal" Mode="In" Type="Boolean" />
+      <Parameter Name="vPassword" Mode="In" Type="String" />
+      <Parameter Name="vActiv" Mode="In" Type="Boolean" />
+    </FunctionImport>
+    <FunctionImport Name="spLogin" ReturnType="Collection(GoDinghyDBModel.spLogin_Result)">
+      <Parameter Name="vInitials" Mode="In" Type="String" />
+      <Parameter Name="vPassword" Mode="In" Type="String" />
+    </FunctionImport>
+  </EntityContainer>
+  <ComplexType Name="spLogin_Result">
+    <Property Type="String" Name="Message" Nullable="true" MaxLength="250" />
+    <Property Type="Int32" Name="Id" Nullable="true" />
+  </ComplexType>
+</Schema>
